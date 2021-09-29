@@ -29,7 +29,7 @@ namespace nou
 			return;
 		}
 
-		m_segmentTimer += 0.1f;
+		m_segmentTimer += 0.001f;
 
 		if (m_segmentTimer >= 1)
 		{
@@ -53,6 +53,6 @@ namespace nou
 
 
 
-		m_owner->transform.m_pos = glm::vec3(PathSampler::LERP(keypoints[m_segmentIndex]->transform.m_pos, keypoints[m_segmentIndex + 1]->transform.m_pos, m_segmentTimer));
+		m_owner->transform.m_pos = glm::vec3(PathSampler::LERP(keypoints[m_segmentIndex]->transform.m_pos, keypoints[m_segmentIndex + 1]->transform.m_pos, m_segmentTimer ));
 	}
 }

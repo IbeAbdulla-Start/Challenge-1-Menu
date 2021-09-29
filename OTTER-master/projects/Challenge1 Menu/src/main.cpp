@@ -16,9 +16,9 @@ using namespace nou;
 
 //Forward declaring our global resources for this demo.
 std::unique_ptr<ShaderProgram> prog_texLit, prog_lit, prog_unlit;
-std::unique_ptr<Mesh> duckMesh, boxMesh;
+std::unique_ptr<Mesh> duckMesh, boxMesh, recMesh;
 std::unique_ptr<Texture2D> duckTex;
-std::unique_ptr<Material> duckMat, unselectedMat, selectedMat, lineMat;
+std::unique_ptr<Material> duckMat, unselectedMat, selectedMat, lineMat,recMat;
 
 //Function to keep main clean
 void LoadDefaultResources();
@@ -57,8 +57,23 @@ int main()
 	duckEntity.transform.m_pos = glm::vec3(0.0f, -1.0f, 0.0f);
 	duckEntity.transform.m_rotation = glm::angleAxis(glm::radians(-30.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
+	Entity RectangleE = Entity::Create();
+	RectangleE.Add<CMeshRenderer>(RectangleE, *recMesh, *recMat);
+	RectangleE.Add<CPathAnimator>(RectangleE);
+	RectangleE.transform.m_pos = glm::vec3(0.0f, 2.0f, 0.0f);
+	RectangleE.transform.m_scale = glm::vec3(2.0f, 0.2f, 1.0f);
+
 	//Setting up our container of waypoints.
 	std::vector<std::unique_ptr<Entity>> points;
+	points.push_back(Entity::Allocate());
+	points.back()->Add<CMeshRenderer>(*points.back(), *boxMesh, *unselectedMat);
+	points.back()->transform.m_scale = glm::vec3(0.0f, 0.0f, 0.0f);
+	points.back()->transform.m_pos = glm::vec3(0.0f, 2.0f, 0.0f);
+
+	points.push_back(Entity::Allocate());
+	points.back()->Add<CMeshRenderer>(*points.back(), *boxMesh, *unselectedMat);
+	points.back()->transform.m_scale = glm::vec3(0.0f, 0.0f, 0.0f);
+	points.back()->transform.m_pos = glm::vec3(0.0f, -1.0f, 0.0f);
 
 	//Setting up our utility to draw the given path.
 	PathSampler sampler = PathSampler();
@@ -67,6 +82,7 @@ int main()
 	pathDrawUtility.Add<CLineRenderer>(pathDrawUtility, sampler, *lineMat);
 
 	App::Tick();
+
 
 	//This is our main loop.
 	while (!App::IsClosing() && !Input::GetKey(GLFW_KEY_ESCAPE))
@@ -79,15 +95,18 @@ int main()
 		camEntity.Get<CCamera>().Update();
 
 		//Update our path animator.
-		duckEntity.Get<CPathAnimator>().Update(points, deltaTime);
-
+		if (RectangleE.transform.m_pos != glm::vec3(0.0f, -2.0f, 0.0f)) 
+		{
+			RectangleE.Get<CPathAnimator>().Update(points, deltaTime);
+		}
 		//Update transformation matrices.
 		for (size_t i = 0; i < points.size(); ++i)
 		{
 			points[i]->transform.RecomputeGlobal();
 		}
 
-		duckEntity.transform.RecomputeGlobal();
+		
+		RectangleE.transform.RecomputeGlobal();
 
 		//Draw everything.
 		for (size_t i = 0; i < points.size(); ++i)
@@ -95,7 +114,8 @@ int main()
 			points[i]->Get<CMeshRenderer>().Draw();
 		}
 
-		duckEntity.Get<CMeshRenderer>().Draw();
+		
+		RectangleE.Get<CMeshRenderer>().Draw();
 
 		//Draw our path (for debugging/demo purposes).
 		pathDrawUtility.Get<CLineRenderer>().Draw(points);
@@ -210,6 +230,14 @@ void LoadDefaultResources()
 	//Set up Box
 	boxMesh = std::make_unique<Mesh>();
 	GLTF::LoadMesh("box/Box.gltf", *boxMesh);
+
+	//Set up Rec
+	recMesh = std::make_unique<Mesh>();
+	GLTF::LoadMesh("Rectangle/rectangle.gltf", *recMesh);
+
+	recMat = std::make_unique<Material>(*prog_lit);
+	
+
 
 	duckMat = std::make_unique<Material>(*prog_texLit);
 	duckMat->AddTexture("albedo", *duckTex);
