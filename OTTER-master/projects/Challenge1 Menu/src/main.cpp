@@ -9,6 +9,7 @@
 #include "NOU/GLTFLoader.h"
 
 #include "imgui.h"
+#include <iostream>
 
 #include <memory>
 
@@ -73,7 +74,7 @@ int main()
 	points.push_back(Entity::Allocate());
 	points.back()->Add<CMeshRenderer>(*points.back(), *boxMesh, *unselectedMat);
 	points.back()->transform.m_scale = glm::vec3(0.0f, 0.0f, 0.0f);
-	points.back()->transform.m_pos = glm::vec3(0.0f, -1.0f, 0.0f);
+	points.back()->transform.m_pos = glm::vec3(0.0f, -0.1f, 0.0f);
 
 	//Setting up our utility to draw the given path.
 	PathSampler sampler = PathSampler();
@@ -83,7 +84,7 @@ int main()
 
 	App::Tick();
 
-
+	
 	//This is our main loop.
 	while (!App::IsClosing() && !Input::GetKey(GLFW_KEY_ESCAPE))
 	{
@@ -95,9 +96,14 @@ int main()
 		camEntity.Get<CCamera>().Update();
 
 		//Update our path animator.
-		if (RectangleE.transform.m_pos != glm::vec3(0.0f, -2.0f, 0.0f)) 
+		if (RectangleE.transform.m_pos.y > 0.0f)
 		{
 			RectangleE.Get<CPathAnimator>().Update(points, deltaTime);
+		}
+		else
+		{
+			//idk
+			std::cout << "yo debug hit";
 		}
 		//Update transformation matrices.
 		for (size_t i = 0; i < points.size(); ++i)

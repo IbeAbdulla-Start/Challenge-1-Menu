@@ -1,4 +1,6 @@
 #include "CPathAnimator.h"
+#define _USE_MATH_DEFINES
+#include <math.h>
 
 namespace nou
 {
@@ -29,14 +31,16 @@ namespace nou
 			return;
 		}
 
-		m_segmentTimer += 0.001f;
+		m_segmentTimer += 0.025f;
+		//adjust for ease in/ease out
+		//m_segmentTimer = (sin(m_segmentTimer - M_PI / 2) + 1) / 2;
 
-		if (m_segmentTimer >= 1)
+		/*if (m_segmentTimer >= 1)
 		{
 			m_segmentTimer = 0;
 			m_segmentIndex += 1;
 
-		}
+		}*/
 
 		if (m_segmentIndex + 1 >= keypoints.size())
 		{
@@ -50,8 +54,6 @@ namespace nou
 
 			return;
 		}
-
-
 
 		m_owner->transform.m_pos = glm::vec3(PathSampler::LERP(keypoints[m_segmentIndex]->transform.m_pos, keypoints[m_segmentIndex + 1]->transform.m_pos, m_segmentTimer ));
 	}
