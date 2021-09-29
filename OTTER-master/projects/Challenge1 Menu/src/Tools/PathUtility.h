@@ -17,6 +17,9 @@ that we intend the class for use as a component with the ENTT framework.
 
 #include <memory>
 #include <functional>
+#define _USE_MATH_DEFINES
+#include <math.h>
+
 
 namespace nou
 {
@@ -28,6 +31,8 @@ namespace nou
 		template<typename T>
 		static T LERP(const T& p0, const T& p1, float t)
 		{
+			//adjust for ease-in and ease-out
+			t = (sin(t - M_PI / 2) + 1) / 2;
 			return (1.0f - t) * p0 + t * p1;
 		}
 

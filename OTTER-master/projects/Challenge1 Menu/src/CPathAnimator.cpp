@@ -29,7 +29,7 @@ namespace nou
 			return;
 		}
 
-		m_segmentTimer += deltaTime * 0.2f;
+		m_segmentTimer += 0.1f;
 
 		if (m_segmentTimer >= 1)
 		{
