@@ -17,9 +17,9 @@ using namespace nou;
 
 //Forward declaring our global resources for this demo.
 std::unique_ptr<ShaderProgram> prog_texLit, prog_lit, prog_unlit;
-std::unique_ptr<Mesh> duckMesh, boxMesh, recMesh;
-std::unique_ptr<Texture2D> duckTex;
-std::unique_ptr<Material> duckMat, unselectedMat, selectedMat, lineMat,recMat;
+std::unique_ptr<Mesh> duckMesh, boxMesh, recMesh,trashyMesh;
+std::unique_ptr<Texture2D> duckTex,TrashyTex;
+std::unique_ptr<Material> duckMat, unselectedMat, selectedMat, lineMat,recMat,trashyMat;
 
 //Function to keep main clean
 void LoadDefaultResources();
@@ -64,6 +64,14 @@ int main()
 	RectangleE.transform.m_pos = glm::vec3(0.0f, 2.0f, 0.0f);
 	RectangleE.transform.m_scale = glm::vec3(2.0f, 0.2f, 1.0f);
 
+	Entity TrashyE = Entity::Create();
+	TrashyE.Add<CMeshRenderer>(TrashyE, *trashyMesh, *trashyMat);
+	TrashyE.Add<CPathAnimator>(TrashyE);
+	TrashyE.transform.m_pos = glm::vec3(-2.5f, 0.0f, 1.f);
+	TrashyE.transform.m_rotation = glm::angleAxis(glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+	TrashyE.transform.m_scale = glm::vec3(1.f,1.f, 1.f);
+	
+
 	//Setting up our container of waypoints.
 	std::vector<std::unique_ptr<Entity>> points;
 	points.push_back(Entity::Allocate());
@@ -75,6 +83,17 @@ int main()
 	points.back()->Add<CMeshRenderer>(*points.back(), *boxMesh, *unselectedMat);
 	points.back()->transform.m_scale = glm::vec3(0.0f, 0.0f, 0.0f);
 	points.back()->transform.m_pos = glm::vec3(0.0f, -0.1f, 0.0f);
+
+	std::vector<std::unique_ptr<Entity>> points2;
+	points2.push_back(Entity::Allocate());
+	points2.back()->Add<CMeshRenderer>(*points.back(), *boxMesh, *unselectedMat);
+	points2.back()->transform.m_scale = glm::vec3(0.0f, 0.0f, 0.0f);
+	points2.back()->transform.m_pos = glm::vec3(-2.5f, 0.0f, 1.0f);
+
+	points2.push_back(Entity::Allocate());
+	points2.back()->Add<CMeshRenderer>(*points.back(), *boxMesh, *unselectedMat);
+	points2.back()->transform.m_scale = glm::vec3(0.0f, 0.0f, 0.0f);
+	points2.back()->transform.m_pos = glm::vec3(-0.4, 0.0f, 1.0f);
 
 	//Setting up our utility to draw the given path.
 	PathSampler sampler = PathSampler();
@@ -103,7 +122,18 @@ int main()
 		else
 		{
 			//idk
-			std::cout << "yo debug hit";
+
+			TrashyE.transform.RecomputeGlobal();
+			TrashyE.Get<CMeshRenderer>().Draw();
+
+			if (TrashyE.transform.m_pos.x < -0.5) {
+				TrashyE.Get<CPathAnimator>().Update(points2, deltaTime);
+			}
+			else {
+
+			}
+			
+		
 		}
 		//Update transformation matrices.
 		for (size_t i = 0; i < points.size(); ++i)
@@ -122,7 +152,7 @@ int main()
 
 		
 		RectangleE.Get<CMeshRenderer>().Draw();
-
+	
 		//Draw our path (for debugging/demo purposes).
 		pathDrawUtility.Get<CLineRenderer>().Draw(points);
 
@@ -133,20 +163,20 @@ int main()
 		ImGui::Begin("Waypoints", &listPanel, ImVec2(300, 200));
 
 		//Add a new waypoint!
-		if (ImGui::Button("Add"))
-		{
-			points.push_back(Entity::Allocate());
-			points.back()->Add<CMeshRenderer>(*points.back(), *boxMesh, *unselectedMat);
-			points.back()->transform.m_scale = glm::vec3(0.1f, 0.1f, 0.1f);
+		//if (ImGui::Button("Add"))
+		//{
+		//	points.push_back(Entity::Allocate());
+		//	points.back()->Add<CMeshRenderer>(*points.back(), *boxMesh, *unselectedMat);
+		//	points.back()->transform.m_scale = glm::vec3(0.1f, 0.1f, 0.1f);
 
-			//Initialize our position somewhere near the last waypoint.
-			if (points.size() > 1)
-			{
-				auto& lastP = points[points.size() - 2];
-				auto& p = points.back();
-				p->transform.m_pos = lastP->transform.m_pos + glm::vec3(0.2f, 0.0f, 0.0f);
-			}
-		}
+		//	//Initialize our position somewhere near the last waypoint.
+		//	if (points.size() > 1)
+		//	{
+		//		auto& lastP = points[points.size() - 2];
+		//		auto& p = points.back();
+		//		p->transform.m_pos = lastP->transform.m_pos + glm::vec3(0.2f, 0.0f, 0.0f);
+		//	}
+		//}
 
 		//Interface for selecting a waypoint.
 		static size_t pointSelected = 0;
@@ -185,7 +215,7 @@ int main()
 			points[pointSelected]->Get<CMeshRenderer>().SetMaterial(*selectedMat);
 			static bool transformPanel = true;
 
-			ImGui::Begin("Point Coordinates", &transformPanel, ImVec2(300, 100));
+		ImGui::Begin("Point Coordinates", &transformPanel, ImVec2(300, 100));
 
 			//This will tie the position of the selected
 			//waypoint to input fields rendered with Imgui.
@@ -243,6 +273,12 @@ void LoadDefaultResources()
 
 	recMat = std::make_unique<Material>(*prog_lit);
 	
+	trashyMesh = std::make_unique<Mesh>();
+	GLTF::LoadMesh("trashy/Trashy.gltf", *trashyMesh);
+	TrashyTex = std::make_unique <Texture2D>("trashy/Trashy2.png");
+
+	trashyMat = std::make_unique<Material>(*prog_texLit);
+	trashyMat->AddTexture("albedo", *TrashyTex);
 
 
 	duckMat = std::make_unique<Material>(*prog_texLit);
