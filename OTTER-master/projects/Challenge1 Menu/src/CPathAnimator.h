@@ -19,11 +19,16 @@ namespace nou
 		void SetMode(PathSampler::PathMode mode);
 		void Update(const PathSampler::KeypointSet& keypoints, float deltaTime);
 
+		void UpdateScale(const PathSampler::KeypointSet& keypoints, float deltaTime);
+
 	private:
 
 		Entity* m_owner;
 		float m_segmentTimer;
 		size_t m_segmentIndex;
+
+		float m_segmentTimer2;
+		size_t m_segmentIndex2;
 		PathSampler::PathMode m_mode;
 	};
 }

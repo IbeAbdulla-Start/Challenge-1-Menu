@@ -86,14 +86,28 @@ int main()
 
 	std::vector<std::unique_ptr<Entity>> points2;
 	points2.push_back(Entity::Allocate());
-	points2.back()->Add<CMeshRenderer>(*points.back(), *boxMesh, *unselectedMat);
+	points2.back()->Add<CMeshRenderer>(*points2.back(), *boxMesh, *unselectedMat);
 	points2.back()->transform.m_scale = glm::vec3(0.0f, 0.0f, 0.0f);
 	points2.back()->transform.m_pos = glm::vec3(-2.5f, 0.0f, 1.0f);
 
 	points2.push_back(Entity::Allocate());
-	points2.back()->Add<CMeshRenderer>(*points.back(), *boxMesh, *unselectedMat);
+	points2.back()->Add<CMeshRenderer>(*points2.back(), *boxMesh, *unselectedMat);
 	points2.back()->transform.m_scale = glm::vec3(0.0f, 0.0f, 0.0f);
 	points2.back()->transform.m_pos = glm::vec3(-0.4, 0.0f, 1.0f);
+
+	//points for scaling
+	std::vector<std::unique_ptr<Entity>> pointsS;
+	pointsS.push_back(Entity::Allocate());
+	pointsS.back()->Add<CMeshRenderer>(*pointsS.back(), *boxMesh, *unselectedMat);
+	pointsS.back()->transform.m_scale = glm::vec3(0.0f, 0.0f, 0.0f);
+	pointsS.back()->transform.m_pos = glm::vec3(1.0f, 1.0f, 1.0f);
+	//pointsS.back()->transform.m_rotation = glm::vec3(0.0, 0.0, 0.0f); //change later
+
+	pointsS.push_back(Entity::Allocate());
+	pointsS.back()->Add<CMeshRenderer>(*pointsS.back(), *boxMesh, *unselectedMat);
+	pointsS.back()->transform.m_scale = glm::vec3(0.0f, 0.0f, 0.0f);
+	pointsS.back()->transform.m_pos = glm::vec3(5.0, 5.0f, 1.0f);
+	//pointsS.back()->transform.m_rotation = glm::vec3(0.0, 0.0f, 0.0f); //change later
 
 	//Setting up our utility to draw the given path.
 	PathSampler sampler = PathSampler();
@@ -130,6 +144,8 @@ int main()
 				TrashyE.Get<CPathAnimator>().Update(points2, deltaTime);
 			}
 			else {
+				//std::cout << "debug hit";
+				TrashyE.Get<CPathAnimator>().UpdateScale(pointsS, deltaTime);
 
 			}
 			

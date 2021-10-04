@@ -35,6 +35,12 @@ namespace nou
 			t = (sin(t - M_PI / 2) + 1) / 2;
 			return (1.0f - t) * p0 + t * p1;
 		}
+		//2nd LERP function
+		template<typename T>
+		static T LERPLINEAR(const T& p0, const T& p1, float t)
+		{
+			return (1.0f - t) * p0 + t * p1;
+		}
 
 		//These affect how smooth our drawn version
 		//of a path will be.
