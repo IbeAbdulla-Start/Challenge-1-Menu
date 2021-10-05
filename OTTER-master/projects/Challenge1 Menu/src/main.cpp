@@ -72,7 +72,7 @@ int main()
 	Entity TrashyE = Entity::Create();
 	TrashyE.Add<CMeshRenderer>(TrashyE, *trashyMesh, *trashyMat);
 	TrashyE.Add<CPathAnimator>(TrashyE);
-	TrashyE.transform.m_pos = glm::vec3(-2.5f, 0.0f, 1.f);
+	TrashyE.transform.m_pos = glm::vec3(-2.5f, 0.0f, 2.f);
 	TrashyE.transform.m_rotation = glm::angleAxis(glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 	TrashyE.transform.m_scale = glm::vec3(1.f,1.f, 1.f);
 	
@@ -248,9 +248,10 @@ void LoadDefaultResources()
 	
 	trashyMesh = std::make_unique<Mesh>();
 	GLTF::LoadMesh("trashy/Trashy.gltf", *trashyMesh);
-	TrashyTex = std::make_unique <Texture2D>("trashy/Trashy2.png");
+	TrashyTex = std::make_unique<Texture2D>("trashy/Trashy2.png");
 
 	trashyMat = std::make_unique<Material>(*prog_texLit);
+	
 	trashyMat->AddTexture("albedo", *TrashyTex);
 
 
