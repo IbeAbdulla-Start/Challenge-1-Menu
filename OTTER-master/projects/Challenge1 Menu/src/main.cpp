@@ -35,6 +35,11 @@ T LERP(const T& p0, const T& p1, float t)
 
 int main()
 {
+
+	bool isPressed = false;
+	bool listPanel = true;
+
+	bool timerDone = false;
 	App::Init("Week 4 Tutorial - Paths and Curves", 800, 800);
 	App::SetClearColor(glm::vec4(0.0f, 0.27f, 0.4f, 1.0f));
 
@@ -128,121 +133,73 @@ int main()
 		//Updates the camera.
 		camEntity.Get<CCamera>().Update();
 
-		//Update our path animator.
-		if (RectangleE.transform.m_pos.y > 0.0f)
-		{
-			RectangleE.Get<CPathAnimator>().Update(points, deltaTime);
-		}
-		else
-		{
-			//idk
+		if (isPressed && !timerDone)
 
-			TrashyE.transform.RecomputeGlobal();
-			TrashyE.Get<CMeshRenderer>().Draw();
-
-			if (TrashyE.transform.m_pos.x < -0.5) {
-				TrashyE.Get<CPathAnimator>().Update(points2, deltaTime);
+		{//Update our path animator.
+			if (RectangleE.transform.m_pos.y > 0.0f)
+			{
+				RectangleE.Get<CPathAnimator>().Update(points, deltaTime);
 			}
-			else {
-				//std::cout << "debug hit";
-				TrashyE.Get<CPathAnimator>().UpdateScale(pointsS, deltaTime);
+			else
+			{
+				//idk
+
+				TrashyE.transform.RecomputeGlobal();
+				TrashyE.Get<CMeshRenderer>().Draw();
+
+				if (TrashyE.transform.m_pos.x < -0.5) {
+					TrashyE.Get<CPathAnimator>().Update(points2, deltaTime);
+				}
+				else {
+					//std::cout << "debug hit";
+					TrashyE.Get<CPathAnimator>().UpdateScale(pointsS, deltaTime);
+
+				}
+
 
 			}
-			
-		
-		}
-		//Update transformation matrices.
-		for (size_t i = 0; i < points.size(); ++i)
-		{
-			points[i]->transform.RecomputeGlobal();
-		}
+			//Update transformation matrices.
+			for (size_t i = 0; i < points.size(); ++i)
+			{
+				points[i]->transform.RecomputeGlobal();
+			}
 
-		
-		RectangleE.transform.RecomputeGlobal();
 
-		//Draw everything.
-		for (size_t i = 0; i < points.size(); ++i)
-		{
-			points[i]->Get<CMeshRenderer>().Draw();
+			RectangleE.transform.RecomputeGlobal();
+
+			//Draw everything.
+			for (size_t i = 0; i < points.size(); ++i)
+			{
+				points[i]->Get<CMeshRenderer>().Draw();
+			}
+
+
+			RectangleE.Get<CMeshRenderer>().Draw();
+
+			//Draw our path (for debugging/demo purposes).
+			pathDrawUtility.Get<CLineRenderer>().Draw(points);
 		}
-
-		
-		RectangleE.Get<CMeshRenderer>().Draw();
-	
-		//Draw our path (for debugging/demo purposes).
-		pathDrawUtility.Get<CLineRenderer>().Draw(points);
 
 		//For Imgui...
-		App::StartImgui();
-
-		static bool listPanel = true;
-		ImGui::Begin("Waypoints", &listPanel, ImVec2(300, 200));
-
-		//Add a new waypoint!
-		//if (ImGui::Button("Add"))
-		//{
-		//	points.push_back(Entity::Allocate());
-		//	points.back()->Add<CMeshRenderer>(*points.back(), *boxMesh, *unselectedMat);
-		//	points.back()->transform.m_scale = glm::vec3(0.1f, 0.1f, 0.1f);
-
-		//	//Initialize our position somewhere near the last waypoint.
-		//	if (points.size() > 1)
-		//	{
-		//		auto& lastP = points[points.size() - 2];
-		//		auto& p = points.back();
-		//		p->transform.m_pos = lastP->transform.m_pos + glm::vec3(0.2f, 0.0f, 0.0f);
-		//	}
-		//}
-
-		//Interface for selecting a waypoint.
-		static size_t pointSelected = 0;
-		static std::string pointLabel = "";
-
-		if (pointSelected >= points.size())
-			pointSelected = points.size() - 1;
-
-		//Remove the last waypoint.
-		if (ImGui::Button("Remove") && points.size() > 0)
+		if (listPanel)
 		{
-			points.erase(points.begin() + pointSelected);
-		}
+			App::StartImgui();
 
 
-		for (size_t i = 0; i < points.size(); ++i)
-		{
-			pointLabel = "Point " + std::to_string(i);
+			ImGui::Begin("Rubbish Rush", &listPanel, ImVec2(300, 200));
 
-			if (ImGui::Selectable(pointLabel.c_str(), i == pointSelected))
-			{
-				if (pointSelected < points.size())
-					points[pointSelected]->Get<CMeshRenderer>().SetMaterial(*unselectedMat);
-
-				pointSelected = i;
+			if (!isPressed)
+			{//Add a new waypoint!
+				if (ImGui::Button("Start"))
+				{
+					isPressed = true;
+					listPanel = false;
+				}
 			}
-		}
-
-		ImGui::End();
-
-		//Interface for moving a selected component.
-		if (pointSelected < points.size())
-		{
-			auto& transform = points[pointSelected]->transform;
-
-			points[pointSelected]->Get<CMeshRenderer>().SetMaterial(*selectedMat);
-			static bool transformPanel = true;
-
-		ImGui::Begin("Point Coordinates", &transformPanel, ImVec2(300, 100));
-
-			//This will tie the position of the selected
-			//waypoint to input fields rendered with Imgui.
-			ImGui::InputFloat("X", &(transform.m_pos.x));
-			ImGui::InputFloat("Y", &(transform.m_pos.y));
-			ImGui::InputFloat("Z", &(transform.m_pos.z));
 
 			ImGui::End();
+			App::EndImgui();
 		}
-
-		App::EndImgui();
 
 		//This sticks all the drawing we just did on the screen.
 		App::SwapBuffers();
