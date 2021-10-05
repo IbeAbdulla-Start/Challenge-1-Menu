@@ -101,13 +101,13 @@ int main()
 	pointsS.back()->Add<CMeshRenderer>(*pointsS.back(), *boxMesh, *unselectedMat);
 	pointsS.back()->transform.m_scale = glm::vec3(0.0f, 0.0f, 0.0f);
 	pointsS.back()->transform.m_pos = glm::vec3(1.0f, 1.0f, 1.0f);
-	//pointsS.back()->transform.m_rotation = glm::vec3(0.0, 0.0, 0.0f); //change later
+	pointsS.back()->transform.m_rotation = glm::angleAxis(glm::radians(90.0f), glm::vec3(1.0f, 0.5f, 0.0f));
 
 	pointsS.push_back(Entity::Allocate());
 	pointsS.back()->Add<CMeshRenderer>(*pointsS.back(), *boxMesh, *unselectedMat);
 	pointsS.back()->transform.m_scale = glm::vec3(0.0f, 0.0f, 0.0f);
-	pointsS.back()->transform.m_pos = glm::vec3(5.0, 5.0f, 1.0f);
-	//pointsS.back()->transform.m_rotation = glm::vec3(0.0, 0.0f, 0.0f); //change later
+	pointsS.back()->transform.m_pos = glm::vec3(2.5, 2.5f, 1.0f);
+	pointsS.back()->transform.m_rotation = glm::angleAxis(glm::radians(90.0f), glm::vec3(1.0f, -0.5f, 0.0f));
 
 	//Setting up our utility to draw the given path.
 	PathSampler sampler = PathSampler();

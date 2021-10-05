@@ -102,7 +102,7 @@ namespace nou
 			p1 = keypoints[p1_index]->transform.m_pos;
 
 			m_owner->transform.m_scale = glm::vec3(PathSampler::LERPLINEAR(p0, p1, t));
-			//m_owner->transform.m_rotation = PathSampler::LERPLINEAR(keypoints[p0_index]->transform.m_rotation, keypoints[p1_index]->transform.m_rotation, t);
+			m_owner->transform.m_rotation = PathSampler::LERPLINEAR(keypoints[p0_index]->transform.m_rotation, keypoints[p1_index]->transform.m_rotation, t);
 			
 		}
 	}
