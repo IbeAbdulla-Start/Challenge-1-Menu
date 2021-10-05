@@ -72,7 +72,7 @@ int main()
 	Entity TrashyE = Entity::Create();
 	TrashyE.Add<CMeshRenderer>(TrashyE, *trashyMesh, *trashyMat);
 	TrashyE.Add<CPathAnimator>(TrashyE);
-	TrashyE.transform.m_pos = glm::vec3(-2.5f, 0.0f, 2.f);
+	TrashyE.transform.m_pos = glm::vec3(-2.5f, 0.0f, 10.f);
 	TrashyE.transform.m_rotation = glm::angleAxis(glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 	TrashyE.transform.m_scale = glm::vec3(1.f,1.f, 1.f);
 	
@@ -93,25 +93,25 @@ int main()
 	points2.push_back(Entity::Allocate());
 	points2.back()->Add<CMeshRenderer>(*points2.back(), *boxMesh, *unselectedMat);
 	points2.back()->transform.m_scale = glm::vec3(0.0f, 0.0f, 0.0f);
-	points2.back()->transform.m_pos = glm::vec3(-2.5f, 0.0f, 1.0f);
+	points2.back()->transform.m_pos = glm::vec3(-2.5f, 0.0f, 1.25f);
 
 	points2.push_back(Entity::Allocate());
 	points2.back()->Add<CMeshRenderer>(*points2.back(), *boxMesh, *unselectedMat);
 	points2.back()->transform.m_scale = glm::vec3(0.0f, 0.0f, 0.0f);
-	points2.back()->transform.m_pos = glm::vec3(-0.4, 0.0f, 1.0f);
+	points2.back()->transform.m_pos = glm::vec3(-0.4, 0.0f, 1.25f);
 
 	//points for scaling
 	std::vector<std::unique_ptr<Entity>> pointsS;
 	pointsS.push_back(Entity::Allocate());
 	pointsS.back()->Add<CMeshRenderer>(*pointsS.back(), *boxMesh, *unselectedMat);
 	pointsS.back()->transform.m_scale = glm::vec3(0.0f, 0.0f, 0.0f);
-	pointsS.back()->transform.m_pos = glm::vec3(1.0f, 1.0f, 1.0f);
+	pointsS.back()->transform.m_pos = glm::vec3(0.8f, 0.8f, 1.0f); //SCALING VARIABLE
 	pointsS.back()->transform.m_rotation = glm::angleAxis(glm::radians(90.0f), glm::vec3(1.0f, 0.5f, 0.0f));
 
 	pointsS.push_back(Entity::Allocate());
 	pointsS.back()->Add<CMeshRenderer>(*pointsS.back(), *boxMesh, *unselectedMat);
 	pointsS.back()->transform.m_scale = glm::vec3(0.0f, 0.0f, 0.0f);
-	pointsS.back()->transform.m_pos = glm::vec3(2.5, 2.5f, 1.0f);
+	pointsS.back()->transform.m_pos = glm::vec3(2.5, 2.5f, 1.0f); //SCALING VARIABLE
 	pointsS.back()->transform.m_rotation = glm::angleAxis(glm::radians(90.0f), glm::vec3(1.0f, -0.5f, 0.0f));
 
 	//Setting up our utility to draw the given path.
