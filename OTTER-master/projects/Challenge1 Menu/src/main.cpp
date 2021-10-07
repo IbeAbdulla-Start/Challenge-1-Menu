@@ -107,13 +107,13 @@ int main()
 	pointsS.push_back(Entity::Allocate());
 	pointsS.back()->Add<CMeshRenderer>(*pointsS.back(), *boxMesh, *unselectedMat);
 	pointsS.back()->transform.m_scale = glm::vec3(0.0f, 0.0f, 0.0f);
-	pointsS.back()->transform.m_pos = glm::vec3(0.8f, 0.8f, 1.0f); //SCALING VARIABLE
+	pointsS.back()->transform.m_pos = glm::vec3(0.6f, 0.6f, 1.0f); //SCALING VARIABLE
 	pointsS.back()->transform.m_rotation = glm::angleAxis(glm::radians(90.0f), glm::vec3(1.0f, 0.5f, 0.0f));
 
 	pointsS.push_back(Entity::Allocate());
 	pointsS.back()->Add<CMeshRenderer>(*pointsS.back(), *boxMesh, *unselectedMat);
 	pointsS.back()->transform.m_scale = glm::vec3(0.0f, 0.0f, 0.0f);
-	pointsS.back()->transform.m_pos = glm::vec3(2.5, 2.5f, 1.0f); //SCALING VARIABLE
+	pointsS.back()->transform.m_pos = glm::vec3(2.8, 2.8f, 1.0f); //SCALING VARIABLE
 	pointsS.back()->transform.m_rotation = glm::angleAxis(glm::radians(90.0f), glm::vec3(1.0f, -0.5f, 0.0f));
 
 	//Setting up our utility to draw the given path.
@@ -202,7 +202,10 @@ int main()
 					}
 					else if (TrashyE.transform.m_pos.x > -2.4) {
 						//std::cout << "debug hit";
-						TrashyE.Get<CPathAnimator>().UpdateScale(pointsS, deltaTime);
+						//reconfig scale
+						TrashyE.transform.m_scale = glm::vec3(1.f, 1.f, 1.f);
+						TrashyE.transform.m_rotation = glm::vec3(glm::radians(90.0f), 0.0f, 0.0f);
+						//TrashyE.Get<CPathAnimator>().UpdateScale(pointsS, deltaTime);
 
 					}
 					else {
@@ -238,10 +241,10 @@ int main()
 					timeLoopA -= deltaTime;
 
 				}
-				else {
-					timeLoop = 12.f;
-					timeLoopA = 5.f;
-				}
+				//else {
+					//timeLoop = 12.f;
+					//timeLoopA = 5.f;
+				//}
 			}
 			
 			
