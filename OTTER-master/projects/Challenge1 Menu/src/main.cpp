@@ -32,6 +32,8 @@ T LERP(const T& p0, const T& p1, float t)
 	return (1.0f - t) * p0 + t * p1;
 }
 
+float timeLoop = 12.f;
+float timeLoopA = 5.f;
 
 int main()
 {
@@ -82,7 +84,7 @@ int main()
 	points.push_back(Entity::Allocate());
 	points.back()->Add<CMeshRenderer>(*points.back(), *boxMesh, *unselectedMat);
 	points.back()->transform.m_scale = glm::vec3(0.0f, 0.0f, 0.0f);
-	points.back()->transform.m_pos = glm::vec3(0.0f, 2.0f, 0.0f);
+	points.back()->transform.m_pos = glm::vec3(0.0f, 2.1f, 0.0f);
 
 	points.push_back(Entity::Allocate());
 	points.back()->Add<CMeshRenderer>(*points.back(), *boxMesh, *unselectedMat);
@@ -130,56 +132,120 @@ int main()
 		App::FrameStart();
 		float deltaTime = App::GetDeltaTime();
 
+		
 		//Updates the camera.
 		camEntity.Get<CCamera>().Update();
+		if (timeLoop > 0) {
+			timerDone = false;
+			timeLoop -= deltaTime;
+			if (isPressed && !timerDone)
 
-		if (isPressed && !timerDone)
+			{//Update our path animator.
+				if (RectangleE.transform.m_pos.y > 0.0f)
+				{
+					RectangleE.Get<CPathAnimator>().Update(points, deltaTime);
+				}
+				else
+				{
+					//idk
 
-		{//Update our path animator.
-			if (RectangleE.transform.m_pos.y > 0.0f)
-			{
-				RectangleE.Get<CPathAnimator>().Update(points, deltaTime);
+					TrashyE.transform.RecomputeGlobal();
+					TrashyE.Get<CMeshRenderer>().Draw();
+
+					if (TrashyE.transform.m_pos.x < -0.5) {
+						TrashyE.Get<CPathAnimator>().Update(points2, deltaTime);
+					}
+					else {
+						//std::cout << "debug hit";
+						TrashyE.Get<CPathAnimator>().UpdateScale(pointsS, deltaTime);
+
+					}
+
+
+				}
+				//Update transformation matrices.
+				for (size_t i = 0; i < points.size(); ++i)
+				{
+					points[i]->transform.RecomputeGlobal();
+				}
+
+
+				RectangleE.transform.RecomputeGlobal();
+
+				//Draw everything.
+				for (size_t i = 0; i < points.size(); ++i)
+				{
+					points[i]->Get<CMeshRenderer>().Draw();
+				}
+
+
+				RectangleE.Get<CMeshRenderer>().Draw();
+
+				//Draw our path (for debugging/demo purposes).
+				pathDrawUtility.Get<CLineRenderer>().Draw(points);
 			}
-			else
-			{
-				//idk
+		}
+		else {
+			timerDone = true;
+			
+			if (isPressed && timerDone)
 
-				TrashyE.transform.RecomputeGlobal();
-				TrashyE.Get<CMeshRenderer>().Draw();
+			{//Update our path animator.
+				
+					//idk
 
-				if (TrashyE.transform.m_pos.x < -0.5) {
-					TrashyE.Get<CPathAnimator>().Update(points2, deltaTime);
+					TrashyE.transform.RecomputeGlobal();
+					TrashyE.Get<CMeshRenderer>().Draw();
+
+					if (TrashyE.transform.m_pos.x > -2.4) {
+						TrashyE.Get<CPathAnimator>().Update(points2, deltaTime);
+					}
+					else if (TrashyE.transform.m_pos.x > -2.4) {
+						//std::cout << "debug hit";
+						TrashyE.Get<CPathAnimator>().UpdateScale(pointsS, deltaTime);
+
+					}
+					else {
+
+						if (RectangleE.transform.m_pos.y < 2.0f)
+						{
+							RectangleE.Get<CPathAnimator>().Update(points, deltaTime);
+						}
+					}
+				
+				//Update transformation matrices.
+				for (size_t i = 0; i < points.size(); ++i)
+				{
+					points[i]->transform.RecomputeGlobal();
+				}
+
+
+				RectangleE.transform.RecomputeGlobal();
+
+				//Draw everything.
+				for (size_t i = 0; i < points.size(); ++i)
+				{
+					points[i]->Get<CMeshRenderer>().Draw();
+				}
+
+
+				RectangleE.Get<CMeshRenderer>().Draw();
+			
+				//Draw our path (for debugging/demo purposes).
+				pathDrawUtility.Get<CLineRenderer>().Draw(points);
+
+				if (timeLoopA > 0) {
+					timeLoopA -= deltaTime;
+
 				}
 				else {
-					//std::cout << "debug hit";
-					TrashyE.Get<CPathAnimator>().UpdateScale(pointsS, deltaTime);
-
+					timeLoop = 12.f;
+					timeLoopA = 5.f;
 				}
-
-
 			}
-			//Update transformation matrices.
-			for (size_t i = 0; i < points.size(); ++i)
-			{
-				points[i]->transform.RecomputeGlobal();
-			}
-
-
-			RectangleE.transform.RecomputeGlobal();
-
-			//Draw everything.
-			for (size_t i = 0; i < points.size(); ++i)
-			{
-				points[i]->Get<CMeshRenderer>().Draw();
-			}
-
-
-			RectangleE.Get<CMeshRenderer>().Draw();
-
-			//Draw our path (for debugging/demo purposes).
-			pathDrawUtility.Get<CLineRenderer>().Draw(points);
+			
+			
 		}
-
 		//For Imgui...
 		if (listPanel)
 		{
