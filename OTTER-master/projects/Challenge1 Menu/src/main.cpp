@@ -33,7 +33,7 @@ T LERP(const T& p0, const T& p1, float t)
 }
 
 float timeLoop = 12.f;
-float timeLoopA = 5.f;
+
 
 int main()
 {
@@ -135,12 +135,19 @@ int main()
 		
 		//Updates the camera.
 		camEntity.Get<CCamera>().Update();
-		if (timeLoop > 0) {
-			timerDone = false;
-			timeLoop -= deltaTime;
+		
 			if (isPressed && !timerDone)
 
 			{//Update our path animator.
+
+				if (timeLoop > 0) {
+					timerDone = false;
+					timeLoop -= deltaTime;
+				}
+				else {
+					timerDone = true;
+				}
+
 				if (RectangleE.transform.m_pos.y > 0.0f)
 				{
 					RectangleE.Get<CPathAnimator>().Update(points, deltaTime);
@@ -184,9 +191,7 @@ int main()
 				//Draw our path (for debugging/demo purposes).
 				pathDrawUtility.Get<CLineRenderer>().Draw(points);
 			}
-		}
-		else {
-			timerDone = true;
+		
 			
 			if (isPressed && timerDone)
 
@@ -237,10 +242,10 @@ int main()
 				//Draw our path (for debugging/demo purposes).
 				pathDrawUtility.Get<CLineRenderer>().Draw(points);
 
-				if (timeLoopA > 0) {
-					timeLoopA -= deltaTime;
+				//if (timeLoopA > 0) {
+				//	timeLoopA -= deltaTime;
 
-				}
+				//}
 				//else {
 					//timeLoop = 12.f;
 					//timeLoopA = 5.f;
@@ -248,7 +253,7 @@ int main()
 			}
 			
 			
-		}
+		
 		//For Imgui...
 		if (listPanel)
 		{
