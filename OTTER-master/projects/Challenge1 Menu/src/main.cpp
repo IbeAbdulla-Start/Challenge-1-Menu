@@ -42,7 +42,7 @@ int main()
 	bool listPanel = true;
 
 	bool timerDone = false;
-	App::Init("Week 4 Tutorial - Paths and Curves", 800, 800);
+	App::Init("Assignment 1", 800, 800);
 	App::SetClearColor(glm::vec4(0.0f, 0.27f, 0.4f, 1.0f));
 
 	App::InitImgui();
@@ -107,14 +107,29 @@ int main()
 	pointsS.push_back(Entity::Allocate());
 	pointsS.back()->Add<CMeshRenderer>(*pointsS.back(), *boxMesh, *unselectedMat);
 	pointsS.back()->transform.m_scale = glm::vec3(0.0f, 0.0f, 0.0f);
-	pointsS.back()->transform.m_pos = glm::vec3(0.6f, 0.6f, 1.0f); //SCALING VARIABLE
-	pointsS.back()->transform.m_rotation = glm::angleAxis(glm::radians(90.0f), glm::vec3(1.0f, 0.5f, 0.0f));
+	pointsS.back()->transform.m_pos = glm::vec3(0.8f, 0.8f, 1.0f); //SCALING VARIABLE
+	//pointsS.back()->transform.m_rotation = glm::angleAxis(glm::radians(90.0f), glm::vec3(1.0f, -0.3f, 0.0f));
+	pointsS.back()->transform.m_rotation = glm::vec3(glm::radians(90.0f), 0.0, glm::radians(30.f));
 
 	pointsS.push_back(Entity::Allocate());
 	pointsS.back()->Add<CMeshRenderer>(*pointsS.back(), *boxMesh, *unselectedMat);
 	pointsS.back()->transform.m_scale = glm::vec3(0.0f, 0.0f, 0.0f);
-	pointsS.back()->transform.m_pos = glm::vec3(2.8, 2.8f, 1.0f); //SCALING VARIABLE
-	pointsS.back()->transform.m_rotation = glm::angleAxis(glm::radians(90.0f), glm::vec3(1.0f, -0.5f, 0.0f));
+	pointsS.back()->transform.m_pos = glm::vec3(1.5f, 2.8f, 1.0f); //SCALING VARIABLE
+	//pointsS.back()->transform.m_rotation = glm::angleAxis(glm::radians(90.0f), glm::vec3(1.0f, 0.3f, 0.0f));
+	pointsS.back()->transform.m_rotation = glm::vec3(glm::radians(90.0f), 0.0, glm::radians(-20.f));
+
+	std::vector<std::unique_ptr<Entity>> pointsS2;
+	pointsS2.push_back(Entity::Allocate());
+	pointsS2.back()->Add<CMeshRenderer>(*pointsS.back(), *boxMesh, *unselectedMat);
+	pointsS2.back()->transform.m_scale = glm::vec3(0.0f, 0.0f, 0.0f);
+	pointsS2.back()->transform.m_pos = glm::vec3(1.5f, 1.5f, 1.0f); //SCALING VARIABLE
+	pointsS2.back()->transform.m_rotation = glm::vec3(glm::radians(90.0f), 0.0f, 0.0f);
+	pointsS2.push_back(Entity::Allocate());
+	pointsS2.back()->Add<CMeshRenderer>(*pointsS.back(), *boxMesh, *unselectedMat);
+	pointsS2.back()->transform.m_scale = glm::vec3(0.0f, 0.0f, 0.0f);
+	pointsS2.back()->transform.m_pos = glm::vec3(0.5f, 0.2f, 1.0f); //SCALING VARIABLE
+	pointsS2.back()->transform.m_rotation = glm::vec3(glm::radians(90.0f), 0.0f, 0.0f);
+	
 
 	//Setting up our utility to draw the given path.
 	PathSampler sampler = PathSampler();
@@ -200,17 +215,20 @@ int main()
 					//idk
 
 					TrashyE.transform.RecomputeGlobal();
-					TrashyE.Get<CMeshRenderer>().Draw();
+					
 
 					if (TrashyE.transform.m_pos.x > -2.4) {
 						TrashyE.Get<CPathAnimator>().Update(points2, deltaTime);
+						//TrashyE.transform.m_scale = glm::vec3(1.f, 1.f, 1.f);
+						
+						TrashyE.Get<CPathAnimator>().UpdateScale(pointsS2, deltaTime);
 					}
 					else if (TrashyE.transform.m_pos.x > -2.4) {
 						//std::cout << "debug hit";
 						//reconfig scale
-						TrashyE.transform.m_scale = glm::vec3(1.f, 1.f, 1.f);
-						TrashyE.transform.m_rotation = glm::vec3(glm::radians(90.0f), 0.0f, 0.0f);
-						//TrashyE.Get<CPathAnimator>().UpdateScale(pointsS, deltaTime);
+						//TrashyE.transform.m_scale = glm::vec3(1.f, 1.f, 1.f);
+						//TrashyE.transform.m_rotation = glm::vec3(glm::radians(90.0f), 0.0f, 0.0f);
+						//TrashyE.Get<CPathAnimator>().UpdateScale(pointsS2, deltaTime);
 
 					}
 					else {
@@ -220,6 +238,7 @@ int main()
 							RectangleE.Get<CPathAnimator>().Update(points, deltaTime);
 						}
 					}
+					TrashyE.Get<CMeshRenderer>().Draw();
 				
 				//Update transformation matrices.
 				for (size_t i = 0; i < points.size(); ++i)

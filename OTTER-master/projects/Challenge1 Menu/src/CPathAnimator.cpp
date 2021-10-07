@@ -67,7 +67,7 @@ namespace nou
 
 		else
 		{
-			m_segmentTimer2 += deltaTime;
+			m_segmentTimer2 += 1.0f * deltaTime;
 
 			//Ensure we are not "over time" and move to the next segment
 				//if necessary.
