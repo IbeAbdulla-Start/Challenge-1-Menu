@@ -32,6 +32,8 @@ T LERP(const T& p0, const T& p1, float t)
 	return (1.0f - t) * p0 + t * p1;
 }
 
+
+template<typename T>
 T Catmull(const T& p0, const T& p1, const T& p2, const T& p3, float t)
 {
 	return 0.5f * (2.f * p1 + t * (-p0 + p2)
