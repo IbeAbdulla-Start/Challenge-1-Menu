@@ -90,23 +90,23 @@ int main()
 	points.push_back(Entity::Allocate());
 	points.back()->Add<CMeshRenderer>(*points.back(), *boxMesh, *unselectedMat);
 	points.back()->transform.m_scale = glm::vec3(0.0f, 0.0f, 0.0f);
-	points.back()->transform.m_pos = glm::vec3(0.0f, 3.1f, 0.0f);
+	points.back()->transform.m_pos = glm::vec3(0.0f, 4.1f, 0.0f);
 
 	points.push_back(Entity::Allocate());
 	points.back()->Add<CMeshRenderer>(*points.back(), *boxMesh, *unselectedMat);
 	points.back()->transform.m_scale = glm::vec3(0.0f, 0.0f, 0.0f);
-	points.back()->transform.m_pos = glm::vec3(0.0f, -0.1f, 0.0f);
+	points.back()->transform.m_pos = glm::vec3(0.0f, -0.05f, 0.0f);
 
 	std::vector<std::unique_ptr<Entity>> points2;
 	points2.push_back(Entity::Allocate());
 	points2.back()->Add<CMeshRenderer>(*points2.back(), *boxMesh, *unselectedMat);
 	points2.back()->transform.m_scale = glm::vec3(0.0f, 0.0f, 0.0f);
-	points2.back()->transform.m_pos = glm::vec3(-2.5f, 0.0f, 1.25f);
+	points2.back()->transform.m_pos = glm::vec3(-3.0f, 0.0f, 1.25f);
 
 	points2.push_back(Entity::Allocate());
 	points2.back()->Add<CMeshRenderer>(*points2.back(), *boxMesh, *unselectedMat);
 	points2.back()->transform.m_scale = glm::vec3(0.0f, 0.0f, 0.0f);
-	points2.back()->transform.m_pos = glm::vec3(-0.4, 0.0f, 1.25f);
+	points2.back()->transform.m_pos = glm::vec3(-0.48, 0.0f, 1.25f);
 
 	//points for scaling
 	std::vector<std::unique_ptr<Entity>> pointsS;
@@ -292,6 +292,7 @@ int main()
 
 
 			ImGui::Begin("Rubbish Rush", &listPanel, ImVec2(300, 200));
+			ImGui::
 
 			if (!isPressed)
 			{//Add a new waypoint!

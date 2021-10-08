@@ -34,7 +34,7 @@ namespace nou
 			return;
 		}
 
-		m_segmentTimer += 1.0f*deltaTime;
+		m_segmentTimer += 1.3f*deltaTime;
 		//adjust for ease in/ease out
 		//m_segmentTimer = (sin(m_segmentTimer - M_PI / 2) + 1) / 2;
 
