@@ -32,6 +32,13 @@ T LERP(const T& p0, const T& p1, float t)
 	return (1.0f - t) * p0 + t * p1;
 }
 
+T Catmull(const T& p0, const T& p1, const T& p2, const T& p3, float t)
+{
+	return 0.5f * (2.f * p1 + t * (-p0 + p2)
+		+ t * t * (2.f * p0 - 5.f * p1 + 4.f * p2 - p3)
+		+ t * t * t * (-p0 + 3.f * p1 - 3.f * p2 + p3));
+}
+
 float timeLoop = 12.f;
 
 
@@ -292,7 +299,7 @@ int main()
 
 
 			ImGui::Begin("Rubbish Rush", &listPanel, ImVec2(300, 200));
-			ImGui::
+			//ImGui::
 
 			if (!isPressed)
 			{//Add a new waypoint!

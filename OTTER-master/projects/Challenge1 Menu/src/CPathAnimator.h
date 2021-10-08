@@ -20,6 +20,7 @@ namespace nou
 		void Update(const PathSampler::KeypointSet& keypoints, float deltaTime);
 
 		void UpdateScale(const PathSampler::KeypointSet& keypoints, float deltaTime);
+		void UpdateCAT(const PathSampler::KeypointSet& keypoints, float deltaTime);
 
 	private:
 

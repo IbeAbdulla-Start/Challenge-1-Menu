@@ -106,4 +106,56 @@ namespace nou
 			
 		}
 	}
+
+	void CPathAnimator::UpdateCAT(const PathSampler::KeypointSet& keypoints, float deltaTime) {
+		if (keypoints.size() == 0 || m_segmentTravelTime == 0)
+			return;
+		else {
+			m_segmentTimer += deltaTime;
+
+			//Ensure we are not "over time" and move to the next segment
+			//if necessary.
+			while (m_segmentTimer > m_segmentTravelTime)
+			{
+				m_segmentTimer -= m_segmentTravelTime;
+
+				m_segmentIndex += 1;
+
+				if (m_segmentIndex >= keypoints.size())
+					m_segmentIndex = 0;
+			}
+
+			float t = m_segmentTimer / m_segmentTravelTime;
+
+			// Neither Catmull nor Bezier make sense with less than 4 points.
+			if (keypoints.size() < 4)
+			{
+				m_owner->transform.m_pos = keypoints[0]->transform.m_pos;
+				return;
+			}
+
+			size_t p0_index, p1_index, p2_index, p3_index;
+			glm::vec3 p0, p1, p2, p3;
+
+			// TODO: Complete this function
+			p1_index = m_segmentIndex;
+
+			if (p1_index == 0) {
+				p0_index = keypoints.size() - 1;
+			}
+			else {
+				p0_index = p1_index - 1;
+			}
+
+			p2_index = (p1_index + 1) % keypoints.size();
+			p3_index = (p2_index + 1) % keypoints.size();
+
+			p0 = keypoints[p0_index]->transform.m_pos;
+			p1 = keypoints[p1_index]->transform.m_pos;
+			p2 = keypoints[p2_index]->transform.m_pos;
+			p3 = keypoints[p3_index]->transform.m_pos;
+
+			m_owner->transform.m_pos = PathSampler::Catmull(p0, p1, p2, p3, t);
+		}
+	}
 }
