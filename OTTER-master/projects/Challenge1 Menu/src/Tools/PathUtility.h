@@ -41,7 +41,14 @@ namespace nou
 		{
 			return (1.0f - t) * p0 + t * p1;
 		}
-
+		//catmull rom spline function
+		template<typename T>
+		static T CatmullRomm(const T& p0, const T& p1, const T& p2, const T& p3, float t)
+		{
+			return 0.5f * (2.f * p1 + t * (-p0 + p2)
+				+ t * t * (2.f * p0 - 5.f * p1 + 4.f * p2 - p3)
+				+ t * t * t * (-p0 + 3.f * p1 - 3.f * p2 + p3));
+		}
 		//These affect how smooth our drawn version
 		//of a path will be.
 		static const int NUM_SAMPLES;

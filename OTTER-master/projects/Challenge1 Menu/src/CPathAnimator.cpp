@@ -111,7 +111,7 @@ namespace nou
 		if (keypoints.size() == 0 || m_segmentTravelTime == 0)
 			return;
 		else {
-			m_segmentTimer += deltaTime;
+			m_segmentTimer += 0.05f;
 
 			//Ensure we are not "over time" and move to the next segment
 			//if necessary.
@@ -155,7 +155,7 @@ namespace nou
 			p2 = keypoints[p2_index]->transform.m_pos;
 			p3 = keypoints[p3_index]->transform.m_pos;
 
-			m_owner->transform.m_pos = PathSampler::Catmull(p0, p1, p2, p3, t);
+			m_owner->transform.m_pos = PathSampler::CatmullRomm(p0, p1, p2, p3, t);
 		}
 	}
 }

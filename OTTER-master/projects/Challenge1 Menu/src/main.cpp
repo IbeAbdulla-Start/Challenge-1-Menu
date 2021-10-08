@@ -33,13 +33,7 @@ T LERP(const T& p0, const T& p1, float t)
 }
 
 
-template<typename T>
-T Catmull(const T& p0, const T& p1, const T& p2, const T& p3, float t)
-{
-	return 0.5f * (2.f * p1 + t * (-p0 + p2)
-		+ t * t * (2.f * p0 - 5.f * p1 + 4.f * p2 - p3)
-		+ t * t * t * (-p0 + 3.f * p1 - 3.f * p2 + p3));
-}
+
 
 float timeLoop = 12.f;
 
@@ -84,7 +78,7 @@ int main()
 	Entity TrashyE = Entity::Create();
 	TrashyE.Add<CMeshRenderer>(TrashyE, *trashyMesh, *trashyMat);
 	TrashyE.Add<CPathAnimator>(TrashyE);
-	TrashyE.transform.m_pos = glm::vec3(-2.5f, 0.0f, 10.f);
+	TrashyE.transform.m_pos = glm::vec3(-3.0f, 0.0f, 10.f);
 	TrashyE.transform.m_rotation = glm::angleAxis(glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 	TrashyE.transform.m_scale = glm::vec3(1.f,1.f, 1.f);
 	
@@ -107,15 +101,31 @@ int main()
 	points.back()->transform.m_pos = glm::vec3(0.0f, -0.05f, 0.0f);
 
 	std::vector<std::unique_ptr<Entity>> points2;
+	//POINT 1
 	points2.push_back(Entity::Allocate());
 	points2.back()->Add<CMeshRenderer>(*points2.back(), *boxMesh, *unselectedMat);
 	points2.back()->transform.m_scale = glm::vec3(0.0f, 0.0f, 0.0f);
 	points2.back()->transform.m_pos = glm::vec3(-3.0f, 0.0f, 1.25f);
-
+	//POINT 2
 	points2.push_back(Entity::Allocate());
 	points2.back()->Add<CMeshRenderer>(*points2.back(), *boxMesh, *unselectedMat);
 	points2.back()->transform.m_scale = glm::vec3(0.0f, 0.0f, 0.0f);
-	points2.back()->transform.m_pos = glm::vec3(-0.48, 0.0f, 1.25f);
+	points2.back()->transform.m_pos = glm::vec3(-2.0f, 0.0f, 1.25f);
+	//POINT 3
+	points2.push_back(Entity::Allocate());
+	points2.back()->Add<CMeshRenderer>(*points2.back(), *boxMesh, *unselectedMat);
+	points2.back()->transform.m_scale = glm::vec3(0.0f, 0.0f, 0.0f);
+	points2.back()->transform.m_pos = glm::vec3(-1.5f, 0.0f, 1.25f);
+	//POINT 4
+	points2.push_back(Entity::Allocate());
+	points2.back()->Add<CMeshRenderer>(*points2.back(), *boxMesh, *unselectedMat);
+	points2.back()->transform.m_scale = glm::vec3(0.0f, 0.0f, 0.0f);
+	points2.back()->transform.m_pos = glm::vec3(-1.0f, 0.0f, 1.25f);
+	//POINT 5
+	points2.push_back(Entity::Allocate());
+	points2.back()->Add<CMeshRenderer>(*points2.back(), *boxMesh, *unselectedMat);
+	points2.back()->transform.m_scale = glm::vec3(0.0f, 0.0f, 0.0f);
+	points2.back()->transform.m_pos = glm::vec3(-0.6, 0.0f, 1.25f);
 
 	//points for scaling
 	std::vector<std::unique_ptr<Entity>> pointsS;
@@ -195,8 +205,8 @@ int main()
 					TrashyE.transform.RecomputeGlobal();
 					TrashyE.Get<CMeshRenderer>().Draw();
 
-					if (TrashyE.transform.m_pos.x < -0.5) {
-						TrashyE.Get<CPathAnimator>().Update(points2, deltaTime);
+					if (TrashyE.transform.m_pos.x <= -0.5f) {
+						TrashyE.Get<CPathAnimator>().UpdateCAT(points2, deltaTime);
 					}
 					else {
 						//std::cout << "debug hit";
@@ -239,7 +249,7 @@ int main()
 					
 
 					if (TrashyE.transform.m_pos.x > -2.4) {
-						TrashyE.Get<CPathAnimator>().Update(points2, deltaTime);
+						TrashyE.Get<CPathAnimator>().UpdateCAT(points2, deltaTime);
 						//TrashyE.transform.m_scale = glm::vec3(1.f, 1.f, 1.f);
 						
 						TrashyE.Get<CPathAnimator>().UpdateScale(pointsS2, deltaTime);
