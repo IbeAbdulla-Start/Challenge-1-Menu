@@ -17,9 +17,9 @@ using namespace nou;
 
 //Forward declaring our global resources for this demo.
 std::unique_ptr<ShaderProgram> prog_texLit, prog_lit, prog_unlit;
-std::unique_ptr<Mesh> duckMesh, boxMesh, recMesh,trashyMesh;
-std::unique_ptr<Texture2D> duckTex,TrashyTex;
-std::unique_ptr<Material> duckMat, unselectedMat, selectedMat, lineMat,recMat,trashyMat;
+std::unique_ptr<Mesh> duckMesh, boxMesh, recMesh,trashyMesh,bgMesh;
+std::unique_ptr<Texture2D> duckTex,TrashyTex,recTex,bgTex;
+std::unique_ptr<Material> duckMat, unselectedMat, selectedMat, lineMat,recMat,trashyMat,bgMat;
 
 //Function to keep main clean
 void LoadDefaultResources();
@@ -69,7 +69,8 @@ int main()
 	RectangleE.Add<CMeshRenderer>(RectangleE, *recMesh, *recMat);
 	RectangleE.Add<CPathAnimator>(RectangleE);
 	RectangleE.transform.m_pos = glm::vec3(0.0f, 2.0f, 0.0f);
-	RectangleE.transform.m_scale = glm::vec3(2.0f, 0.2f, 1.0f);
+	RectangleE.transform.m_rotation = glm::angleAxis(glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+	RectangleE.transform.m_scale = glm::vec3(5.0f,0.2f, 4.0f);
 
 	Entity TrashyE = Entity::Create();
 	TrashyE.Add<CMeshRenderer>(TrashyE, *trashyMesh, *trashyMat);
@@ -78,13 +79,18 @@ int main()
 	TrashyE.transform.m_rotation = glm::angleAxis(glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 	TrashyE.transform.m_scale = glm::vec3(1.f,1.f, 1.f);
 	
+	Entity bgE = Entity::Create();
+	bgE.Add<CMeshRenderer>(bgE, *bgMesh, *bgMat);
+	bgE.transform.m_rotation = glm::angleAxis(glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+	bgE.transform.m_pos = glm::vec3(0.f, 0.f, -1.f);
+	bgE.transform.m_scale = glm::vec3(5.8f, 5.8f, 5.8f);
 
 	//Setting up our container of waypoints.
 	std::vector<std::unique_ptr<Entity>> points;
 	points.push_back(Entity::Allocate());
 	points.back()->Add<CMeshRenderer>(*points.back(), *boxMesh, *unselectedMat);
 	points.back()->transform.m_scale = glm::vec3(0.0f, 0.0f, 0.0f);
-	points.back()->transform.m_pos = glm::vec3(0.0f, 2.1f, 0.0f);
+	points.back()->transform.m_pos = glm::vec3(0.0f, 3.1f, 0.0f);
 
 	points.push_back(Entity::Allocate());
 	points.back()->Add<CMeshRenderer>(*points.back(), *boxMesh, *unselectedMat);
@@ -150,6 +156,10 @@ int main()
 		
 		//Updates the camera.
 		camEntity.Get<CCamera>().Update();
+
+		bgE.Get<CMeshRenderer>().Draw();
+		bgE.transform.RecomputeGlobal();
+		
 		
 			if (isPressed && !timerDone)
 
@@ -162,6 +172,8 @@ int main()
 				else {
 					timerDone = true;
 				}
+
+				
 
 				if (RectangleE.transform.m_pos.y > 0.0f)
 				{
@@ -202,7 +214,7 @@ int main()
 
 
 				RectangleE.Get<CMeshRenderer>().Draw();
-
+				
 				//Draw our path (for debugging/demo purposes).
 				pathDrawUtility.Get<CLineRenderer>().Draw(points);
 			}
@@ -233,7 +245,7 @@ int main()
 					}
 					else {
 
-						if (RectangleE.transform.m_pos.y < 2.0f)
+						if (RectangleE.transform.m_pos.y < 3.0f)
 						{
 							RectangleE.Get<CPathAnimator>().Update(points, deltaTime);
 						}
@@ -335,10 +347,19 @@ void LoadDefaultResources()
 
 	//Set up Rec
 	recMesh = std::make_unique<Mesh>();
-	GLTF::LoadMesh("Rectangle/rectangle.gltf", *recMesh);
+	GLTF::LoadMesh("Rectangle/Rec1.gltf", *recMesh);
+	recTex = std::make_unique<Texture2D>("Rectangle/Rec1.png");
 
-	recMat = std::make_unique<Material>(*prog_lit);
-	
+	recMat = std::make_unique<Material>(*prog_texLit);
+	recMat->AddTexture ("albedo", *recTex);
+
+	bgMesh = std::make_unique<Mesh>();
+	GLTF::LoadMesh("backg/menuBackg.gltf", *bgMesh);
+	bgTex = std::make_unique<Texture2D>("backg/menubg.png");
+
+	bgMat = std::make_unique<Material>(*prog_texLit);
+	bgMat->AddTexture("albedo", *bgTex);
+
 	trashyMesh = std::make_unique<Mesh>();
 	GLTF::LoadMesh("trashy/Trashy.gltf", *trashyMesh);
 	TrashyTex = std::make_unique<Texture2D>("trashy/Trashy2.png");
