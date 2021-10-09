@@ -35,7 +35,7 @@ T LERP(const T& p0, const T& p1, float t)
 
 
 
-float timeLoop = 12.f;
+float timeLoop = 6.f;
 
 
 int main()
