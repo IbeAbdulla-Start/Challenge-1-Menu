@@ -17,9 +17,9 @@ using namespace nou;
 
 //Forward declaring our global resources for this demo.
 std::unique_ptr<ShaderProgram> prog_texLit, prog_lit, prog_unlit;
-std::unique_ptr<Mesh> duckMesh, boxMesh, recMesh,trashyMesh,bgMesh;
-std::unique_ptr<Texture2D> duckTex,TrashyTex,recTex,bgTex;
-std::unique_ptr<Material> duckMat, unselectedMat, selectedMat, lineMat,recMat,trashyMat,bgMat;
+std::unique_ptr<Mesh> boxMesh, recMesh,trashyMesh,bgMesh;
+std::unique_ptr<Texture2D> TrashyTex,recTex,bgTex;
+std::unique_ptr<Material> unselectedMat, selectedMat, lineMat,recMat,trashyMat,bgMat;
 
 //Function to keep main clean
 void LoadDefaultResources();
@@ -59,14 +59,6 @@ int main()
 	auto& cam = camEntity.Add<CCamera>(camEntity);
 	cam.Perspective(60.0f, 1.0f, 0.1f, 100.0f);
 	camEntity.transform.m_pos = glm::vec3(0.0f, 0.0f, 4.0f);
-
-	//Creating the duck entity.
-	Entity duckEntity = Entity::Create();
-	duckEntity.Add<CMeshRenderer>(duckEntity, *duckMesh, *duckMat);
-	duckEntity.Add<CPathAnimator>(duckEntity);
-	duckEntity.transform.m_scale = glm::vec3(0.003f, 0.003f, 0.003f);
-	duckEntity.transform.m_pos = glm::vec3(0.0f, -1.0f, 0.0f);
-	duckEntity.transform.m_rotation = glm::angleAxis(glm::radians(-30.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
 	Entity RectangleE = Entity::Create();
 	RectangleE.Add<CMeshRenderer>(RectangleE, *recMesh, *recMat);
@@ -356,11 +348,6 @@ void LoadDefaultResources()
 	std::vector<Shader*> unlit = { v_unlit.get(), f_unlit.get() };
 	prog_unlit = std::make_unique<ShaderProgram>(unlit);
 
-	//Load in the ducky model.
-	duckMesh = std::make_unique<Mesh>();
-	GLTF::LoadMesh("duck/Duck.gltf", *duckMesh);
-	duckTex = std::make_unique<Texture2D>("duck/DuckCM.png");
-	
 	//Set up Box
 	boxMesh = std::make_unique<Mesh>();
 	GLTF::LoadMesh("box/Box.gltf", *boxMesh);
@@ -387,10 +374,6 @@ void LoadDefaultResources()
 	trashyMat = std::make_unique<Material>(*prog_texLit);
 	
 	trashyMat->AddTexture("albedo", *TrashyTex);
-
-
-	duckMat = std::make_unique<Material>(*prog_texLit);
-	duckMat->AddTexture("albedo", *duckTex);
 
 	unselectedMat = std::make_unique<Material>(*prog_lit);
 	unselectedMat->m_color = glm::vec3(0.5f, 0.5f, 0.5f);
